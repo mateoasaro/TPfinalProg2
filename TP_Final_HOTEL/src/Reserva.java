@@ -1,21 +1,48 @@
 import java.util.ArrayList;
 
 public class Reserva {
-    private int idReserva;
+    private int contador=0;
+    private static int idReserva;
     private Habitacion habitacion;
     private int diasReservados;
     private double precioApagar;
     private boolean checkInRealizado;
     private ArrayList<Pasajero> pasajeros;
 
-    public Reserva(int idReserva, Habitacion habitacion, int diasReservados, boolean checkInRealizado) {
-        this.idReserva = idReserva;
+    public Reserva(int idReserva, Habitacion habitacion, int diasReservados) {
+        this.idReserva = contador++;
         this.habitacion = habitacion;
         this.diasReservados = diasReservados;
         this.precioApagar=(diasReservados*habitacion.getPrecioXnoche());
-        this.checkInRealizado = checkInRealizado;
+        this.checkInRealizado = false;
         this.pasajeros = new ArrayList<Pasajero>();
     }
+
+    public void listarPasajeros(){
+        int i=1;
+        for (Pasajero p:pasajeros){
+            System.out.println("PASAJERO NUMERO"+i+" DE LA HABITACION "+habitacion.getNumHabitacion()+":"+p.toString());
+            i++;
+        }
+    }
+
+    public boolean existePasajeroXDni(int dni){
+
+        for (Pasajero p:pasajeros){
+            if (dni==p.getDni()){
+               return true;
+            }
+        }
+        return false;
+    }
+
+    public void agregarPasajero(int dni, String nombre, String apellido, String nacionalidad, String domicilio){
+        Pasajero neuvo = new Pasajero(dni, nombre, apellido, nacionalidad, domicilio);
+
+        pasajeros.add(neuvo);
+    }
+
+
 
     @Override
     public String toString() {

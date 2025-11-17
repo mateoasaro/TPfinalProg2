@@ -4,4 +4,5 @@ public class Administrador extends Usuario implements metodosUsuario{
         super(nombreUsuario, contrasenia);
     }
 
+
 }

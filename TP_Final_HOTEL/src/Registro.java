@@ -14,6 +14,8 @@ public class Registro<T> {
         registroT.remove(t);
     }
 
+
+
     public void listar(){
         for (T t: registroT){
             System.out.println(t.toString());
