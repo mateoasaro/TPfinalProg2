@@ -1,9 +1,11 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 
 public class Hotel {
     private String nombre;
-    private Recepcionista recepcionista;
     private double recaudacionTotal;
     private Registro<Habitacion> habitacionesDisponibles;
     private Registro<Habitacion> habitacionesNoDisponibles;
@@ -12,11 +14,34 @@ public class Hotel {
 
     public Hotel(String nombre) {
         this.nombre = nombre;
-        this.recepcionista = recepcionista;
+
         this.recaudacionTotal=0;
         this.habitacionesDisponibles = new Registro<Habitacion>();
         this.habitacionesNoDisponibles = new Registro<Habitacion>();
         this.registroReservas = new Registro<Reserva>();
+    }
+
+    public JSONObject toJson(){
+        JSONObject nuevo = new JSONObject();
+        nuevo.put("nombre",nombre);
+        nuevo.put("recaudacionTotal",recaudacionTotal);
+        JSONArray habitacionesDisponiblesJson = new JSONArray();
+        JSONArray habitacionesNoDisponiblesJson = new JSONArray();
+        JSONArray reservasJson = new JSONArray();
+        for (Habitacion h : habitacionesDisponibles.getRegistroT()){
+            habitacionesDisponiblesJson.put(h.toJson());
+        }
+        for (Habitacion h : habitacionesNoDisponibles.getRegistroT()){
+            habitacionesNoDisponiblesJson.put(h.toJson());
+        }
+        for (Reserva r : registroReservas.getRegistroT()){
+            habitacionesNoDisponiblesJson.put(r.toJson());
+        }
+        nuevo.put("habitacionesDisponibles",habitacionesDisponiblesJson);
+        nuevo.put("habitacionesNoDisponibles",habitacionesNoDisponiblesJson);
+        nuevo.put("registroReservas",reservasJson);
+
+        return nuevo;
     }
 
     public void listarHabitacionesDisponibles(){
@@ -112,6 +137,15 @@ nueva.agregarPasajero(dni, nombre, apellido, nacionalidad, domicilio);
         return info;
     }
 
+    public boolean existePasajeroXdni(int dni){
+        for (Reserva r: registroReservas.getRegistroT()){
+            if (r.existePasajeroXDni(dni)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public double getRecaudacionTotal() {
         return recaudacionTotal;
     }
@@ -120,14 +154,6 @@ nueva.agregarPasajero(dni, nombre, apellido, nacionalidad, domicilio);
     public void setRecaudacionTotal(double recaudacionTotal) {
         this.recaudacionTotal = recaudacionTotal;
     }
-
-
-
-
-
-
-
-
 
 
 }

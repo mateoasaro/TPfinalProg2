@@ -6,7 +6,7 @@ import java.io.*;
 public class JsonUtiles {
     public static void uploadJSON(JSONArray jsonArray, String archive){
         try{
-            BufferedWriter salida = new BufferedWriter(new FileWriter(archive+".json"));
+            BufferedWriter salida = new BufferedWriter(new FileWriter(archive));
             salida.write(jsonArray.toString());
             salida.flush();
             salida.close();
@@ -17,7 +17,7 @@ public class JsonUtiles {
 
     public static void uploadJSON(JSONObject jsonObject, String archive){
         try{
-            BufferedWriter salida = new BufferedWriter(new FileWriter(archive+".json"));
+            BufferedWriter salida = new BufferedWriter(new FileWriter(archive));
             salida.write(jsonObject.toString());
             salida.flush();
             salida.close();
@@ -31,7 +31,7 @@ public class JsonUtiles {
         String lectura= "";
         try
         {
-            BufferedReader entrada = new BufferedReader(new FileReader(archive+".json"));
+            BufferedReader entrada = new BufferedReader(new FileReader(archive));
             while((lectura = entrada.readLine())!=null){
                 contenido.append(lectura);
             }

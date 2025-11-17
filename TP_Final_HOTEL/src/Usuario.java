@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 public abstract class Usuario {
@@ -5,6 +7,12 @@ public abstract class Usuario {
 
     public Usuario(int dniUsuario) {
         this.dniUsuario = dniUsuario;
+    }
+
+    public JSONObject toJson(){
+        JSONObject nuevo = new JSONObject();
+        nuevo.put("dniUsuario",dniUsuario);
+        return nuevo;
     }
 
     @Override

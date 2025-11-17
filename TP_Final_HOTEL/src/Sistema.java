@@ -1,3 +1,6 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,6 +18,24 @@ public class Sistema {
         this.registroRecepcionistas = new ArrayList<>();
     }
 
+    public void realizarBackup(){
+        JSONObject sistemaJson = toJson();
+        JsonUtiles.uploadJSON(sistemaJson,"hotel.json");
+    }
+
+    public JSONObject toJson(){
+        JSONObject nuevo = new JSONObject();
+        nuevo.put("hotel",hotel.toJson());
+        JSONArray recepcionistasJson = new JSONArray();
+        for (Recepcionista r: registroRecepcionistas){
+            recepcionistasJson.put(r.toJson());
+        }
+        nuevo.put("registroRecepcionistas",recepcionistasJson);
+        nuevo.put("administrador",administrador.toJson());
+
+        return nuevo;
+    }
+
     public void agregarRecepcionista(int dni, String nombre){
         Recepcionista r = new Recepcionista(dni,nombre);
         registroRecepcionistas.add(r);
@@ -28,7 +49,7 @@ public class Sistema {
         return null;
     }
 
-    public void menuPrincipal() {
+    public void menuPrincipal() throws UsuarioInvalidoEx, DniNoEncontradoEx {
 
         boolean salir = false;
         while (!salir) {
@@ -57,23 +78,29 @@ public class Sistema {
                     break;
 
             }
+            //PONGO REALIZAR BACKUP ACA PARA QUE SIEMPRE SE GUARDEN TODOS LOS CAMBIOS AUTOMATICAMENTE,
+            // SIN NECESITAR QUE LO HAGA MANUALMENTE EL ADMIN
+            realizarBackup();
         }
     }
 
 
-        public void menuPasajero(){
+        public void menuPasajero() throws DniNoEncontradoEx {
             int dniUsuario = 0;
                 System.out.println("Si desea ver sus reservas Ingrese su dni: ");
                 dniUsuario = scanner.nextInt();
                 scanner.nextLine();
-
+                if (hotel.existePasajeroXdni(dniUsuario)){
                 hotel.mostrarReservasXdni(dniUsuario);
-                //primero llamar funcion existeDni y lanzar excepcion;
+                }else {
+                    throw new DniNoEncontradoEx("ERROR: EL DNI INGRESADO NO ESTA REGISTRADO EN EL SISTEMA");
+                }
+
 
             }
 
 
-        public void menuAdmin() /* throws UsuarioInvalidoEx */{
+        public void menuAdmin() throws UsuarioInvalidoEx /* throws UsuarioInvalidoEx */{
         String contraseniaAdmin = "";
             System.out.println("\n---ACCESO DE ADMINISTRADOR---");
             if (administrador.iniciarSesion()) {
@@ -112,7 +139,8 @@ public class Sistema {
                                 break;
 
                             case 3:
-                              // serializar
+                              realizarBackup();
+                                System.out.println("Copia de seguridad realizada.");
                                 break;
 
                             case 4:
@@ -141,13 +169,13 @@ public class Sistema {
                     }
                 }
             } else {
-              // throw new UsuarioInvalidoEx;
+              throw new UsuarioInvalidoEx("Contraseña incorrecta: Acceso Denegado");
             }
 }
 
 
 
-         public void menuRecepcionista() /* throws UsuarioInvalidoEx */{
+         public void menuRecepcionista() throws UsuarioInvalidoEx /* throws UsuarioInvalidoEx */{
         int dniUsuario = 0;
              System.out.println("Bienvenido, ingrese su dni: ");
              dniUsuario = scanner.nextInt();
@@ -167,6 +195,7 @@ public class Sistema {
                      System.out.println("6. Ver habitaciones disponibles");
                      System.out.println("7. Ver habitaciones no disponibles");
                      System.out.println("8. Ver habitaciones ocupadas");
+                     System.out.println("9. Ver recaudacion total del hotel");
                      System.out.print("Ingrese una opción: ");
 
                      if (scanner.hasNextInt()) {
@@ -242,6 +271,9 @@ public class Sistema {
                              case 8:
                                  hotel.listarHabitacionesOcupadas();
                                  break;
+                                 case 9:
+                                     System.out.println("Recaudacion total del hotel hasta el momento:  $"+hotel.getRecaudacionTotal());
+                                 break;
                              default:
                                  System.out.println("Opción inválida. Intente de nuevo.");
                                  break;
@@ -255,7 +287,7 @@ public class Sistema {
                  }
              }
              else{
-                 //throw new UsuarioInvalidoEx;
+                 throw new UsuarioInvalidoEx("Contraseña incorrecta: Acceso Denegado");
              }
 
              }

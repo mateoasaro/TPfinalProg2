@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.util.Scanner;
 
 public class Recepcionista extends Usuario implements metodosUsuario{
@@ -10,6 +12,15 @@ public class Recepcionista extends Usuario implements metodosUsuario{
         super(dniUsuario);
         this.nombreRecepcionista = nombreRecepcionista;
     }
+
+    public JSONObject toJson(){
+        JSONObject neuvo= new JSONObject();
+        neuvo.put("Usuario",super.toJson());
+        neuvo.put("nombreRecepcionista",nombreRecepcionista);
+
+        return neuvo;
+    }
+
  public boolean iniciarSesion(){
      System.out.print("Ingrese la contraseña: ");
      String password = scanner.nextLine();

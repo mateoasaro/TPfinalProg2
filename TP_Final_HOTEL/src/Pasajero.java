@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 public class Pasajero extends Usuario{
@@ -12,6 +14,17 @@ public class Pasajero extends Usuario{
         this.apellido = apellido;
         this.nacionalidad = nacionalidad;
         this.domicilio = domicilio;
+    }
+
+    public JSONObject toJson(){
+        JSONObject nuevo= new JSONObject();
+        nuevo.put("Usuario",super.toJson());
+        nuevo.put("nombre",nombre);
+        nuevo.put("apellido",apellido);
+        nuevo.put("nacionalidad",nacionalidad);
+        nuevo.put("domicilio",domicilio);
+
+        return nuevo;
     }
 
     @Override

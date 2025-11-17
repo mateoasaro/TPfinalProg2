@@ -1,3 +1,6 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Reserva {
@@ -16,6 +19,22 @@ public class Reserva {
         this.precioApagar=(diasReservados*habitacion.getPrecioXnoche());
         this.checkInRealizado = false;
         this.pasajeros = new ArrayList<Pasajero>();
+    }
+
+    public JSONObject toJson(){
+        JSONObject nuevo= new JSONObject();
+        nuevo.put("idReserva",idReserva);
+        nuevo.put("habitacion",habitacion.toJson());
+        nuevo.put("diasReservados",diasReservados);
+        nuevo.put("precioApagar",precioApagar);
+        nuevo.put("CheckInRealizado",checkInRealizado);
+        JSONArray pasajerosJson=new JSONArray();
+        for (Pasajero p:pasajeros){
+            pasajerosJson.put(p.toJson());
+        }
+        nuevo.put("pasajeros",pasajerosJson);
+
+        return nuevo;
     }
 
     public void listarPasajeros(){

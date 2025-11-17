@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 public class Habitacion {
@@ -11,6 +13,14 @@ public class Habitacion {
         this.estado = estadoHabitacion.disponible;
     }
 
+    public JSONObject toJson(){
+        JSONObject nuevo = new JSONObject();
+        nuevo.put("numHabitacion",numHabitacion);
+        nuevo.put("precioXnoche",precioXnoche);
+        nuevo.put("estadoHabitacion",estado);
+
+        return nuevo;
+    }
 
     @Override
     public String toString() {
