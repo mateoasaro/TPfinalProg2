@@ -1,4 +1,6 @@
 public interface metodosUsuario {
 
-    //metodo para iniciarSesion
+
+    public boolean iniciarSesion();
+
 }

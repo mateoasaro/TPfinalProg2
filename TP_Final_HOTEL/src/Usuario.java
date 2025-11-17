@@ -1,33 +1,37 @@
-public abstract class Usuario {
-    private String nombreUsuario;
-    private String contrasenia;
+import java.util.Objects;
 
-    public Usuario(String nombreUsuario, String contrasenia) {
-        this.nombreUsuario = nombreUsuario;
-        this.contrasenia = contrasenia;
+public abstract class Usuario {
+    private int dniUsuario;
+
+    public Usuario(int dniUsuario) {
+        this.dniUsuario = dniUsuario;
     }
 
     @Override
     public String toString() {
         return "Usuario{" +
-                "nombreUsuario='" + nombreUsuario + '\'' +
-                ", contrasenia='" + contrasenia + '\'' +
+                "dniUsuario=" + dniUsuario +
                 '}';
     }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public int getDniUsuario() {
+        return dniUsuario;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setDniUsuario(int dniUsuario) {
+        this.dniUsuario = dniUsuario;
     }
 
-    public String getContrasenia() {
-        return contrasenia;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return dniUsuario == usuario.dniUsuario;
     }
 
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(dniUsuario);
     }
 }

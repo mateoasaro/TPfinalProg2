@@ -1,4 +1,5 @@
 import java.time.format.ResolverStyle;
+import java.util.ArrayList;
 
 public class Hotel {
     private String nombre;
@@ -8,7 +9,8 @@ public class Hotel {
     private Registro<Habitacion> habitacionesNoDisponibles;
     private Registro<Reserva> registroReservas;
 
-    public Hotel(String nombre, Recepcionista recepcionista) {
+
+    public Hotel(String nombre) {
         this.nombre = nombre;
         this.recepcionista = recepcionista;
         this.recaudacionTotal=0;
@@ -53,21 +55,29 @@ public class Hotel {
         registroReservas.eliminarRegistro(reserva);
     }
 
-    public void agregarHabitacionDisponible(int numHabitacion, double precioXnoche, estadoHabitacion estado){
-        Habitacion nueva=new Habitacion(numHabitacion, precioXnoche, estado);
+    public void agregarHabitacionDisponible(int numHabitacion, double precioXnoche){
+        Habitacion nueva=new Habitacion(numHabitacion, precioXnoche);
 
         habitacionesDisponibles.agregarRegistro(nueva);
     }
-    public void agregarHabitacionNoDisponible(int numHabitacion, double precioXnoche, estadoHabitacion estado){
-        Habitacion nueva=new Habitacion(numHabitacion, precioXnoche, estado);
+    public void agregarHabitacionNoDisponible(int numHabitacion, double precioXnoche){
+        Habitacion nueva=new Habitacion(numHabitacion, precioXnoche);
 
         habitacionesNoDisponibles.agregarRegistro(nueva);
     }
 
-    public void agregarReserva(int idReserva, int numHabitacion, int diasReservados,int dni, String nombre, String apellido, String nacionalidad, String domicilio){
+    public void agregarReserva( int numHabitacion, int diasReservados,int dni, String nombre, String apellido, String nacionalidad, String domicilio){
 Habitacion habitacionAreservar=buscarHabitacionPorNumero(numHabitacion);
-Reserva nueva= new Reserva(idReserva,habitacionAreservar,diasReservados);
+Reserva nueva= new Reserva(habitacionAreservar,diasReservados);
 nueva.agregarPasajero(dni, nombre, apellido, nacionalidad, domicilio);
+    }
+
+    public String mostrarReservas(){
+        String info ="";
+        for (Reserva r:registroReservas.getRegistroT()){
+            info += r.toString();
+        }
+        return info;
     }
 
     private Habitacion buscarHabitacionPorNumero(int numHabitacion) {
@@ -81,9 +91,9 @@ nueva.agregarPasajero(dni, nombre, apellido, nacionalidad, domicilio);
                 return h;
             }
         }
-        return null; // No se encontró la habitación
+        return null;
     }
-    private Reserva buscarReservaPorDni(int dni){
+    public Reserva buscarReservaPorDni(int dni){
         for (Reserva r:registroReservas.getRegistroT()){
           if (r.existePasajeroXDni(dni)){
               return r;
@@ -93,11 +103,31 @@ nueva.agregarPasajero(dni, nombre, apellido, nacionalidad, domicilio);
         return null;
     }
 
+    public String mostrarReservasXdni(int dni){
+        String info = "";
+        for (Reserva r : registroReservas.getRegistroT()){
+            info += r.toString();
+
+        }
+        return info;
+    }
+
     public double getRecaudacionTotal() {
         return recaudacionTotal;
     }
 
+
     public void setRecaudacionTotal(double recaudacionTotal) {
         this.recaudacionTotal = recaudacionTotal;
     }
+
+
+
+
+
+
+
+
+
+
 }

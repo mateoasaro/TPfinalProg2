@@ -5,10 +5,10 @@ public class Habitacion {
     private double precioXnoche;
     private estadoHabitacion estado;
 
-    public Habitacion(int numHabitacion, double precioXnoche, estadoHabitacion estado) {
+    public Habitacion(int numHabitacion, double precioXnoche ) {
         this.numHabitacion = numHabitacion;
         this.precioXnoche = precioXnoche;
-        this.estado = estado;
+        this.estado = estadoHabitacion.disponible;
     }
 
 

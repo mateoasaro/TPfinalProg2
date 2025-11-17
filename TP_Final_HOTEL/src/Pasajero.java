@@ -1,14 +1,13 @@
 import java.util.Objects;
 
-public class Pasajero {
-    private int dni;
+public class Pasajero extends Usuario{
     private String nombre;
     private String apellido;
     private String nacionalidad;
     private String domicilio;
 
-    public Pasajero(int dni, String nombre, String apellido, String nacionalidad, String domicilio) {
-        this.dni = dni;
+    public Pasajero(int dniUsuario, String nombre, String apellido, String nacionalidad, String domicilio) {
+        super(dniUsuario);
         this.nombre = nombre;
         this.apellido = apellido;
         this.nacionalidad = nacionalidad;
@@ -18,7 +17,7 @@ public class Pasajero {
     @Override
     public String toString() {
         return "Pasajero{" +
-                "dni=" + dni +
+                super.toString() +
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
                 ", nacionalidad='" + nacionalidad + '\'' +
@@ -26,25 +25,9 @@ public class Pasajero {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Pasajero pasajero = (Pasajero) o;
-        return dni == pasajero.dni;
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(dni);
-    }
 
-    public int getDni() {
-        return dni;
-    }
 
-    public void setDni(int dni) {
-        this.dni = dni;
-    }
 
     public String getNombre() {
         return nombre;

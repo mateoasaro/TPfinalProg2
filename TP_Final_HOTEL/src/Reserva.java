@@ -9,7 +9,7 @@ public class Reserva {
     private boolean checkInRealizado;
     private ArrayList<Pasajero> pasajeros;
 
-    public Reserva(int idReserva, Habitacion habitacion, int diasReservados) {
+    public Reserva( Habitacion habitacion, int diasReservados) {
         this.idReserva = contador++;
         this.habitacion = habitacion;
         this.diasReservados = diasReservados;
@@ -29,11 +29,22 @@ public class Reserva {
     public boolean existePasajeroXDni(int dni){
 
         for (Pasajero p:pasajeros){
-            if (dni==p.getDni()){
+            if (dni==p.getDniUsuario()){
                return true;
             }
         }
         return false;
+    }
+
+    public Pasajero buscarPasajeroXdni(int dni){
+        for (Pasajero p : pasajeros){
+            if (dni == p.getDniUsuario()){
+                return p;
+
+            }
+
+        }
+        return null;
     }
 
     public void agregarPasajero(int dni, String nombre, String apellido, String nacionalidad, String domicilio){
