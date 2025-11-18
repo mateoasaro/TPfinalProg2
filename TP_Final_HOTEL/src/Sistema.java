@@ -1,6 +1,7 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -21,8 +22,8 @@ public class Sistema {
     }
 
     public void realizarBackup(){
-        JSONObject sistemaJson = toJson();
-        JsonUtiles.uploadJSON(sistemaJson,"hotel.json");
+        JSONObject hotelJson = hotel.toJson();
+        JsonUtiles.uploadJSON(hotelJson,"hotel.json");
     }
 
     public JSONObject toJson(){
@@ -130,8 +131,7 @@ public class Sistema {
                     System.out.println("1. Volver al Menú Principal");
                     System.out.println("2. Agregar nueva habitación");
                     System.out.println("3. Realizar copia de seguridad (Archivo)");
-                    System.out.println("4. Descargar copia de seguridad (Archivo)");
-                    System.out.println("5. Agregar nuevo recepcionista");// excepcion
+                    System.out.println("4. Agregar nuevo recepcionista");
                     System.out.print("Ingrese una opción: ");
 
                     if (scanner.hasNextInt()) {
@@ -178,11 +178,8 @@ public class Sistema {
                                 System.out.println("Copia de seguridad realizada.");
                                 break;
 
-                            case 4:
-                                // deserializar archivo json
-                                break;
 
-                            case 5:
+                            case 4:
 
                                 System.out.print("Ingrese el DNI del nuevo recepcionista: ");
                                 int dni = scanner.nextInt();
@@ -441,6 +438,75 @@ else {
 }
 
     }
+
+
+    /*
+    public Hotel  descargarBackup(String archivo) throws FileNotFoundException {
+        String contenido = JsonUtiles.downloadJSON(archivo);
+        JSONObject objeto = new JSONObject(contenido);
+        Hotel hotel1 = new Hotel("UTN");
+
+        Registro<Habitacion> habitacionesDisponibles = new Registro<>();
+        Registro<Habitacion> habitacionesNoDisponibles = new Registro<>();
+        Registro <Reserva> registroReservas = new Registro<>();
+        ArrayList<Pasajero> pasajeros = new ArrayList<>();
+
+        JSONArray habitacionesDisponiblesArray = objeto.getJSONArray("habitacionesDisponibles");
+        JSONArray habitacionesNoDisponiblesArray = objeto.getJSONArray("habitacionesNoDisponibles");
+        JSONArray registroReservasArray = objeto.getJSONArray("registroReservas");
+        JSONArray pasajerosArray = objeto.getJSONArray("pasajeros");
+
+        for (int i = 0; i < habitacionesDisponiblesArray.length(); i++){
+            JSONObject habitacion = habitacionesDisponiblesArray.getJSONObject(i);
+            int numHabitacion = habitacion.getInt("numHabitacion");
+            double precioXnoche = habitacion.getDouble("precioXnoche");
+            Habitacion nuevaHabitacion = new Habitacion(numHabitacion,precioXnoche);
+            habitacionesDisponibles.agregarRegistro(nuevaHabitacion);
+        }
+
+        for (int j = 0; j < habitacionesNoDisponiblesArray.length(); j++){
+            JSONObject habitacion = habitacionesNoDisponiblesArray.getJSONObject(j);
+            int numHabitacion = habitacion.getInt("numHabitacion");
+            double precioXnoche = habitacion.getDouble("precioXnoche");
+            Habitacion nuevaHabitacion = new Habitacion(numHabitacion, precioXnoche);
+            habitacionesNoDisponibles.agregarRegistro(nuevaHabitacion);
+        }
+
+        for (int k = 0; k < registroReservasArray.length(); k++){
+            JSONObject reserva = registroReservasArray.getJSONObject(k);
+            JSONObject habitacion = reserva.getJSONObject("habitacion");
+            int idReserva = reserva.getInt("idReserva");
+
+            int numHabitacion = habitacion.getInt("numHabitacion");
+            double precioXnoche = habitacion.getDouble("precioXnoche");
+            Habitacion nuevaHabitacion = new Habitacion(numHabitacion, precioXnoche);
+
+            int diasReservados = reserva.getInt("diasReservados");
+             double precioApagar = reserva.getDouble("precioApagar");
+             boolean checkInRealizado = reserva.getBoolean("checkInRealizado");
+
+             for (int i = 0; i< pasajerosArray.length(); i++){
+                 JSONObject pasajero = pasajerosArray.getJSONObject(i);
+                 int dniUsuario = pasajero.getInt("dniUsuario");
+                 String nombre = pasajero.getString("nombre");
+                  String apellido = pasajero.getString("apellido");
+                  String nacionalidad = pasajero.getString("nacionalidad");
+                  String domicilio = pasajero.getString("domicilio");
+                  Pasajero nuevoPasajero = new Pasajero(dniUsuario, nombre, apellido, nacionalidad, domicilio);
+                  pasajeros.add(nuevoPasajero);
+             }
+             Reserva nuevaReserva = new Reserva(nuevaHabitacion,diasReservados);
+             nuevaReserva.setPasajeros(pasajeros);
+             nuevaReserva.setIdReserva(idReserva);
+             nuevaReserva.setPrecioApagar(precioApagar);
+             nuevaReserva.setCheckInRealizado(checkInRealizado);
+        }
+
+
+        return hotel1;
+    }
+
+     */
 
         }
 
