@@ -20,6 +20,40 @@ public class Reserva {
         this.checkInRealizado = false;
         this.pasajeros = new ArrayList<Pasajero>();
     }
+/*
+    public Reserva(JSONObject jsonObject) {
+
+        this.pasajeros = new ArrayList<>();
+
+        if (jsonObject.has("diasReservados")) {
+            this.diasReservados = jsonObject.getInt("diasReservados");
+        }
+        if (jsonObject.has("precioApagar")) {
+            this.precioApagar = jsonObject.getDouble("precioApagar");
+        }
+        if (jsonObject.has("checkInRealizado")) {
+            this.checkInRealizado = jsonObject.getBoolean("checkInRealizado");
+        }
+
+        if (jsonObject.has("registroPasajeros")) {
+            JSONArray pasajerosArray = jsonObject.getJSONArray("registroPasajeros");
+            cargarPasajerosJson(pasajerosArray);
+        }
+
+        if (jsonObject.has("numHabitacion")) {
+            int numHabitacion = jsonObject.getInt("numHabitacion");
+        }
+    }
+
+    private void cargarPasajerosJson(JSONArray pasajerosArray) {
+        for (int i = 0; i < pasajerosArray.length(); i++) {
+            JSONObject jsonPasajero = pasajerosArray.getJSONObject(i);
+            Pasajero nuevoPasajero = new Pasajero(jsonPasajero);
+            pasajeros.add(nuevoPasajero);
+        }
+    }
+    */
+
 
     public JSONObject toJson(){
         JSONObject nuevo= new JSONObject();

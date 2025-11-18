@@ -38,6 +38,7 @@ public class Sistema {
         return nuevo;
     }
 
+
     public void agregarRecepcionista(int dni, String nombre) throws DniRepetidoException {
         Recepcionista r = new Recepcionista(dni,nombre);
         if (buscarRecepcionistaXdni(dni)==null) {
@@ -247,7 +248,7 @@ public class Sistema {
                      System.out.println("7. Ver habitaciones no disponibles");
                      System.out.println("8. Ver habitaciones ocupadas");
                      System.out.println("9. Ver recaudacion total del hotel");
-                     // metodo cambiar estado de habitacion
+                     System.out.println("10. Modificar estado de una habitacion");
                      System.out.print("Ingrese una opción: ");
 
                      if (scanner.hasNextInt()) {
@@ -300,8 +301,8 @@ public class Sistema {
                                          String domicilio = scanner.nextLine();
 
 
-                                         hotel.agregarReserva(numHabitacion, diasReservados, dni, nombre, apellido, nacionalidad, domicilio);
 
+                                         hotel.agregarReserva(numHabitacion, diasReservados, dni, nombre, apellido, nacionalidad, domicilio);
                                          realizarBackup();
                                          break;
                                  }
@@ -344,6 +345,9 @@ public class Sistema {
                                  case 9:
                                      System.out.println("Recaudacion total del hotel hasta el momento:  $"+hotel.getRecaudacionTotal());
                                  break;
+                             case 10:
+                                 seleccionarEstadoHabitacion();
+                                 break;
                              default:
                                  System.out.println("Opción inválida. Intente de nuevo.");
                                  break;
@@ -369,6 +373,74 @@ public class Sistema {
 
          }
 
+    public void seleccionarEstadoHabitacion() {
+
+        boolean estadoSeleccionado = false;
+        System.out.println("ingrese el numero de la habitacion a modificar: ");
+        int numHabitacion = scanner.nextInt();
+        scanner.nextLine();
+        Habitacion habitacionseleccionada = hotel.buscarHabitacionPorNumero( numHabitacion);
+
+if (habitacionseleccionada != null) {
+    while (!estadoSeleccionado) {
+        System.out.println("\nSeleccione el estado actual de la habitacion");
+        System.out.println("1. Disponible");
+        System.out.println("2. Reservada");
+        System.out.println("3. Ocupada");
+        System.out.println("4. En Limpieza");
+        System.out.println("5. En Reparación");
+        System.out.println("6. En Desinfección");
+        System.out.print("Ingrese el número correspondiente al nuevo estado: ");
+
+        if (scanner.hasNextInt()) {
+            int opcion = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    habitacionseleccionada.setEstado(estadoHabitacion.disponible);
+                    hotel.cambiarHabitacionDeRegistro(habitacionseleccionada);
+                    estadoSeleccionado = true;
+                    break;
+                case 2:
+                    habitacionseleccionada.setEstado(estadoHabitacion.reservada);
+                    hotel.cambiarHabitacionDeRegistro(habitacionseleccionada);
+                    estadoSeleccionado = true;
+                    break;
+                case 3:
+                    habitacionseleccionada.setEstado(estadoHabitacion.ocupada);
+                    hotel.cambiarHabitacionDeRegistro(habitacionseleccionada);
+                    estadoSeleccionado = true;
+                    break;
+                case 4:
+                    habitacionseleccionada.setEstado(estadoHabitacion.enLimpieza);
+                    hotel.cambiarHabitacionDeRegistro(habitacionseleccionada);
+                    estadoSeleccionado = true;
+                    break;
+                case 5:
+                    habitacionseleccionada.setEstado(estadoHabitacion.enReparación);
+                    hotel.cambiarHabitacionDeRegistro(habitacionseleccionada);
+                    estadoSeleccionado = true;
+                    break;
+                case 6:
+                    habitacionseleccionada.setEstado(estadoHabitacion.enDesinfección);
+                    hotel.cambiarHabitacionDeRegistro(habitacionseleccionada);
+                    estadoSeleccionado = true;
+                    break;
+                default:
+                    System.out.println("Error, ingrese una opcion del 1 al 6");
+                    break;
+            }
+        } else {
+            scanner.nextLine();
+        }
+    }
+}
+else {
+    System.out.println("El numero de habitacion seleccionado no existe en el sistema");
+}
+
+    }
 
         }
 

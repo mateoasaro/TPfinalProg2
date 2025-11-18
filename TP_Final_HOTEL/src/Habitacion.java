@@ -13,6 +13,20 @@ public class Habitacion {
         this.estado = estadoHabitacion.disponible;
     }
 
+    public Habitacion(JSONObject jsonObject) {
+
+        if (jsonObject.has("numHabitacion")) {
+            this.numHabitacion = jsonObject.getInt("numHabitacion");
+        }
+        if (jsonObject.has("precioXnoche")) {
+            this.precioXnoche= jsonObject.getDouble("precioXnoche");
+        }
+        if (jsonObject.has("estado")) {
+            String estadoStr = jsonObject.getString("estado");
+            this.estado = estadoHabitacion.valueOf(estadoStr);
+        }
+    }
+
     public JSONObject toJson(){
         JSONObject nuevo = new JSONObject();
         nuevo.put("numHabitacion",numHabitacion);

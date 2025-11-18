@@ -44,6 +44,12 @@ public class Hotel {
         return nuevo;
     }
 
+
+
+
+
+
+
     public void listarHabitacionesDisponibles(){
         System.out.println("HABITACIONES  DISPONIBLES: \n");
         habitacionesDisponibles.listar();
@@ -188,6 +194,17 @@ habitacionesNoDisponibles.agregarRegistro(habitacionAreservar);
 
     public void setRecaudacionTotal(double recaudacionTotal) {
         this.recaudacionTotal = recaudacionTotal;
+    }
+
+    public void cambiarHabitacionDeRegistro(Habitacion habitacionAmover){
+        if (buscarHabitacionPorNumero(habitacionAmover.getNumHabitacion()) != null){
+            habitacionesDisponibles.eliminarRegistro(habitacionAmover);
+            habitacionesNoDisponibles.agregarRegistro(habitacionAmover);
+        }
+        else {
+            habitacionesNoDisponibles.eliminarRegistro(habitacionAmover);
+            habitacionesDisponibles.agregarRegistro(habitacionAmover);
+        }
     }
 
 

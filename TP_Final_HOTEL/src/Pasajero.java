@@ -16,6 +16,7 @@ public class Pasajero extends Usuario{
         this.domicilio = domicilio;
     }
 
+
     public JSONObject toJson(){
         JSONObject nuevo= new JSONObject();
         nuevo.put("Usuario",super.toJson());
@@ -37,6 +38,9 @@ public class Pasajero extends Usuario{
                 ", domicilio='" + domicilio + '\'' +
                 '}';
     }
+
+
+
 
 
 
