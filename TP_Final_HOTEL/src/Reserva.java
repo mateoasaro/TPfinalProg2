@@ -48,7 +48,7 @@ public class Reserva {
     public boolean existePasajeroXDni(int dni){
 
         for (Pasajero p:pasajeros){
-            if (dni==p.getDniUsuario()){
+            if (p.getDniUsuario() == dni){
                return true;
             }
         }

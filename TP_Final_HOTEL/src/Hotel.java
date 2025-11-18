@@ -35,7 +35,7 @@ public class Hotel {
             habitacionesNoDisponiblesJson.put(h.toJson());
         }
         for (Reserva r : registroReservas.getRegistroT()){
-            habitacionesNoDisponiblesJson.put(r.toJson());
+            reservasJson.put(r.toJson());
         }
         nuevo.put("habitacionesDisponibles",habitacionesDisponiblesJson);
         nuevo.put("habitacionesNoDisponibles",habitacionesNoDisponiblesJson);
@@ -74,16 +74,23 @@ public class Hotel {
         Habitacion habitacionReservada=buscarHabitacionPorNumero(numHabitacion);
         Reserva reserva=buscarReservaPorDni(dniPasajero);
 
-        habitacionReservada.setEstado(estadoHabitacion.disponible);
+        habitacionReservada.setEstado(estadoHabitacion.enLimpieza);
         habitacionesNoDisponibles.eliminarRegistro(habitacionReservada);
         habitacionesDisponibles.agregarRegistro(habitacionReservada);
         registroReservas.eliminarRegistro(reserva);
+
     }
 
-    public void agregarHabitacionDisponible(int numHabitacion, double precioXnoche){
-        Habitacion nueva=new Habitacion(numHabitacion, precioXnoche);
+    public void agregarHabitacionDisponible(int numHabitacion, double precioXnoche) throws  NumHabitacionRepetidoEx{
 
-        habitacionesDisponibles.agregarRegistro(nueva);
+    if (!existeHabitacionXnum(numHabitacion)) {
+            Habitacion nueva = new Habitacion(numHabitacion, precioXnoche);
+            habitacionesDisponibles.agregarRegistro(nueva);
+        }else {
+        throw new NumHabitacionRepetidoEx("Numero de habitacion repetido, imposible crear una nueva");
+    }
+
+
     }
     public void agregarHabitacionNoDisponible(int numHabitacion, double precioXnoche){
         Habitacion nueva=new Habitacion(numHabitacion, precioXnoche);
@@ -95,17 +102,32 @@ public class Hotel {
 Habitacion habitacionAreservar=buscarHabitacionPorNumero(numHabitacion);
 Reserva nueva= new Reserva(habitacionAreservar,diasReservados);
 nueva.agregarPasajero(dni, nombre, apellido, nacionalidad, domicilio);
+        registroReservas.agregarRegistro(nueva);
+habitacionAreservar.setEstado(estadoHabitacion.reservada);
+habitacionesDisponibles.eliminarRegistro(habitacionAreservar);
+habitacionesNoDisponibles.agregarRegistro(habitacionAreservar);
+
     }
 
-    public String mostrarReservas(){
+    public void mostrarReservas(){
         String info ="";
         for (Reserva r:registroReservas.getRegistroT()){
-            info += r.toString();
+            //info += r.toString();
+            System.out.println(r);
         }
-        return info;
+
     }
 
-    private Habitacion buscarHabitacionPorNumero(int numHabitacion) {
+    public boolean corroborarDisponibilidad(int numHabitacion){
+        for (Habitacion h : habitacionesDisponibles.getRegistroT()) {
+            if (h.getNumHabitacion() == numHabitacion) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Habitacion buscarHabitacionPorNumero(int numHabitacion) {
         for (Habitacion h : habitacionesDisponibles.getRegistroT()) {
             if (h.getNumHabitacion() == numHabitacion) {
                 return h;
@@ -141,6 +163,19 @@ nueva.agregarPasajero(dni, nombre, apellido, nacionalidad, domicilio);
         for (Reserva r: registroReservas.getRegistroT()){
             if (r.existePasajeroXDni(dni)){
                 return true;
+            }
+        }
+        return false;
+    }
+    public boolean existeHabitacionXnum(int numHabitacion) {
+        for (Habitacion h : habitacionesDisponibles.getRegistroT()) {
+            if (h.getNumHabitacion() == numHabitacion) {
+                return true;
+            }
+            for (Habitacion hab : habitacionesNoDisponibles.getRegistroT()) {
+                if (hab.getNumHabitacion() == numHabitacion) {
+                    return true;
+                }
             }
         }
         return false;

@@ -1,0 +1,98 @@
+{
+  "administrador": {
+    "Usuario": {
+      "dniUsuario": 123
+    }
+  },
+  "hotel": {
+    "recaudacionTotal": 0,
+    "registroReservas": [
+      {
+        "diasReservados": 3,
+        "pasajeros": [
+          {
+            "Usuario": {
+              "dniUsuario": 500
+            },
+            "domicilio": "mar del plata",
+            "apellido": "capozzo",
+            "nombre": "homero",
+            "nacionalidad": "argentina"
+          }
+        ],
+        "CheckInRealizado": false,
+        "idReserva": 0,
+        "precioApagar": 150,
+        "habitacion": {
+          "precioXnoche": 50,
+          "numHabitacion": 19,
+          "estadoHabitacion": "reservada"
+        }
+      }
+    ],
+    "nombre": "UTN",
+    "habitacionesDisponibles": [
+      {
+        "precioXnoche": 15,
+        "numHabitacion": 11,
+        "estadoHabitacion": "disponible"
+      },
+      {
+        "precioXnoche": 35,
+        "numHabitacion": 12,
+        "estadoHabitacion": "disponible"
+      },
+      {
+        "precioXnoche": 50,
+        "numHabitacion": 13,
+        "estadoHabitacion": "disponible"
+      },
+      {
+        "precioXnoche": 15,
+        "numHabitacion": 14,
+        "estadoHabitacion": "disponible"
+      },
+      {
+        "precioXnoche": 35,
+        "numHabitacion": 15,
+        "estadoHabitacion": "disponible"
+      },
+      {
+        "precioXnoche": 50,
+        "numHabitacion": 16,
+        "estadoHabitacion": "disponible"
+      },
+      {
+        "precioXnoche": 15,
+        "numHabitacion": 17,
+        "estadoHabitacion": "disponible"
+      },
+      {
+        "precioXnoche": 35,
+        "numHabitacion": 18,
+        "estadoHabitacion": "disponible"
+      }
+    ],
+    "habitacionesNoDisponibles": [
+      {
+        "precioXnoche": 50,
+        "numHabitacion": 19,
+        "estadoHabitacion": "reservada"
+      }
+    ]
+  },
+  "registroRecepcionistas": [
+    {
+      "Usuario": {
+        "dniUsuario": 222
+      },
+      "nombreRecepcionista": "recepcionista1"
+    },
+    {
+      "Usuario": {
+        "dniUsuario": 987
+      },
+      "nombreRecepcionista": "recepcionista 2"
+    }
+  ]
+}

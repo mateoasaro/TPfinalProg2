@@ -16,6 +16,8 @@ public class Sistema {
         this.hotel = hotel;
         this.administrador = administrador;
         this.registroRecepcionistas = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
+
     }
 
     public void realizarBackup(){
@@ -36,9 +38,13 @@ public class Sistema {
         return nuevo;
     }
 
-    public void agregarRecepcionista(int dni, String nombre){
+    public void agregarRecepcionista(int dni, String nombre) throws DniRepetidoException {
         Recepcionista r = new Recepcionista(dni,nombre);
-        registroRecepcionistas.add(r);
+        if (buscarRecepcionistaXdni(dni)==null) {
+            registroRecepcionistas.add(r);
+        }else {
+            throw new DniRepetidoException("El dni ingresado ya existe en el sistema.");
+        }
     }
     public Recepcionista buscarRecepcionistaXdni(int dniRecepcionista){
         for (Recepcionista r : registroRecepcionistas){
@@ -49,7 +55,7 @@ public class Sistema {
         return null;
     }
 
-    public void menuPrincipal() throws UsuarioInvalidoEx, DniNoEncontradoEx {
+    public void menuPrincipal() {
 
         boolean salir = false;
         while (!salir) {
@@ -64,7 +70,9 @@ public class Sistema {
 
             switch (opcion) {
                 case 1:
-                    menuPasajero();
+
+                        menuPasajero();
+
                     break;
                 case 2:
                     menuAdmin();
@@ -85,22 +93,33 @@ public class Sistema {
     }
 
 
-        public void menuPasajero() throws DniNoEncontradoEx {
+        public void menuPasajero()  {
             int dniUsuario = 0;
                 System.out.println("Si desea ver sus reservas Ingrese su dni: ");
                 dniUsuario = scanner.nextInt();
                 scanner.nextLine();
                 if (hotel.existePasajeroXdni(dniUsuario)){
-                hotel.mostrarReservasXdni(dniUsuario);
+                    System.out.println(hotel.mostrarReservasXdni(dniUsuario));
                 }else {
-                    throw new DniNoEncontradoEx("ERROR: EL DNI INGRESADO NO ESTA REGISTRADO EN EL SISTEMA");
+                    try {
+                        throw new DniNoEncontradoEx("ERROR: EL DNI INGRESADO NO ESTA REGISTRADO EN EL SISTEMA");
+                    } catch (DniNoEncontradoEx ex)
+                    {
+                        System.out.println("DNI INCORRECTO. INGRESE NUEVAMENTE SU DNI: ");
+                        dniUsuario = scanner.nextInt();
+                        scanner.nextLine();
+                        if (!hotel.existePasajeroXdni(dniUsuario)){
+                            menuPasajero();
+                        }
+                    }
+
                 }
 
 
             }
 
 
-        public void menuAdmin() throws UsuarioInvalidoEx /* throws UsuarioInvalidoEx */{
+        public void menuAdmin() {
         String contraseniaAdmin = "";
             System.out.println("\n---ACCESO DE ADMINISTRADOR---");
             if (administrador.iniciarSesion()) {
@@ -111,7 +130,7 @@ public class Sistema {
                     System.out.println("2. Agregar nueva habitación");
                     System.out.println("3. Realizar copia de seguridad (Archivo)");
                     System.out.println("4. Descargar copia de seguridad (Archivo)");
-                    System.out.println("5. Agregar nuevo recepcionista");
+                    System.out.println("5. Agregar nuevo recepcionista");// excepcion
                     System.out.print("Ingrese una opción: ");
 
                     if (scanner.hasNextInt()) {
@@ -134,8 +153,23 @@ public class Sistema {
                                 double precio = scanner.nextDouble();
                                 scanner.nextLine();
 
-                                hotel.agregarHabitacionDisponible(numHabitacion, precio);
+                                try {
+                                    hotel.agregarHabitacionDisponible(numHabitacion, precio);
+                                }catch (NumHabitacionRepetidoEx e){
+                                    System.out.println("Numero de habitacion repetido, ingrese otro.");
+                                     numHabitacion = scanner.nextInt();
+                                    scanner.nextLine();
+                                    try
+                                    {
+                                        hotel.agregarHabitacionDisponible(numHabitacion,precio);
+                                    }
+                                    catch (NumHabitacionRepetidoEx xe)
+                                    {
+                                        System.out.println(xe.getMessage());
+                                    }
 
+                                }
+                                realizarBackup();
                                 break;
 
                             case 3:
@@ -156,7 +190,19 @@ public class Sistema {
                                 System.out.print("Ingrese el nombre del nuevo recepcionista: ");
                                 String nombre = scanner.nextLine();
 
-                                agregarRecepcionista(dni, nombre);
+                                try {
+                                    agregarRecepcionista(dni, nombre);
+                                } catch (DniRepetidoException e) {
+                                    System.out.print("DNI repetido, ingrese otro DNI para el nuevo recepcionista: ");
+                                     dni = scanner.nextInt();
+                                    scanner.nextLine();
+                                    try {
+                                        agregarRecepcionista(dni, nombre);
+                                    }catch (DniRepetidoException exception){
+                                        System.out.println("Dni repetido... regresando al menu principal");
+                                    }
+                                    }
+                                realizarBackup();
                                 break;
 
                             default:
@@ -169,13 +215,18 @@ public class Sistema {
                     }
                 }
             } else {
-              throw new UsuarioInvalidoEx("Contraseña incorrecta: Acceso Denegado");
-            }
+                try {
+                    throw new UsuarioInvalidoEx("Contraseña incorrecta: Acceso Denegado");
+                }catch (UsuarioInvalidoEx e){
+                    System.out.println("Contraseña incorrecta: Acceso Denegado, sera enviado devuelta al menu principal");
+                    menuPrincipal();
+                }
+                }
 }
 
 
 
-         public void menuRecepcionista() throws UsuarioInvalidoEx /* throws UsuarioInvalidoEx */{
+         public void menuRecepcionista(){
         int dniUsuario = 0;
              System.out.println("Bienvenido, ingrese su dni: ");
              dniUsuario = scanner.nextInt();
@@ -183,12 +234,12 @@ public class Sistema {
              Recepcionista recepcionista = buscarRecepcionistaXdni(dniUsuario);
              if (recepcionista != null){
                  System.out.println("\n---ACCESO DE RECEPCIONISTA---");
-             if( recepcionista.iniciarSesion()){
+             if(recepcionista.iniciarSesion()){
                  boolean salir = false;
                  while (!salir) {
                      System.out.println("\n---MENÚ DE RECEPCIONISTA---");
                      System.out.println("1. Volver al menu principal");
-                     System.out.println("2. Registrar reserva");
+                     System.out.println("2. Registrar reserva");// excepcion
                      System.out.println("3. Realizar check-in de reserva");
                      System.out.println("4. Realizar check-out de habitacion");
                      System.out.println("5. Ver reservas del hotel");
@@ -196,6 +247,7 @@ public class Sistema {
                      System.out.println("7. Ver habitaciones no disponibles");
                      System.out.println("8. Ver habitaciones ocupadas");
                      System.out.println("9. Ver recaudacion total del hotel");
+                     // metodo cambiar estado de habitacion
                      System.out.print("Ingrese una opción: ");
 
                      if (scanner.hasNextInt()) {
@@ -211,31 +263,49 @@ public class Sistema {
                                  int numHabitacion = scanner.nextInt();
                                  scanner.nextLine();
 
-                                 System.out.print("Ingrese la cantidad de días de la reserva: ");
-                                 int diasReservados = scanner.nextInt();
-                                 scanner.nextLine();
+                                     if (!hotel.corroborarDisponibilidad(numHabitacion)){
+                                         try {
+                                             throw new HabitacionNoDisponibleEx("Habitacion no disponible");
+                                         }catch (HabitacionNoDisponibleEx ex){
+                                             System.out.print("La habitacion no esta disponible, elija alguna de las siguientes: ");
+                                             hotel.listarHabitacionesDisponibles();
+                                             System.out.println("Elija el numero de la habitacion que quiere reservar:");
+                                              numHabitacion = scanner.nextInt();
+                                             scanner.nextLine();
+                                             if (!hotel.corroborarDisponibilidad(numHabitacion)){
+                                                 System.out.println("La habitacion seleccionada no esta disponible... regresando al inicio. ");
+                                                 menuRecepcionista();
+                                             }
+                                         }
+                                         }else {
+                                         System.out.print("Ingrese la cantidad de días de la reserva: ");
+                                         int diasReservados = scanner.nextInt();
+                                         scanner.nextLine();
 
 
-                                 System.out.print("Ingrese el DNI del pasajero: ");
-                                 int dni = scanner.nextInt();
-                                 scanner.nextLine();
+                                         System.out.print("Ingrese el DNI del pasajero: ");
+                                         int dni = scanner.nextInt();
+                                         scanner.nextLine();
 
-                                 System.out.print("Ingrese el nombre del pasajero: ");
-                                 String nombre = scanner.nextLine();
+                                         System.out.print("Ingrese el nombre del pasajero: ");
+                                         String nombre = scanner.nextLine();
 
-                                 System.out.print("Ingrese el apellido del pasajero: ");
-                                 String apellido = scanner.nextLine();
+                                         System.out.print("Ingrese el apellido del pasajero: ");
+                                         String apellido = scanner.nextLine();
 
-                                 System.out.print("Ingrese la nacionalidad del pasajero: ");
-                                 String nacionalidad = scanner.nextLine();
+                                         System.out.print("Ingrese la nacionalidad del pasajero: ");
+                                         String nacionalidad = scanner.nextLine();
 
-                                 System.out.print("Ingrese el domicilio del pasajero: ");
-                                 String domicilio = scanner.nextLine();
+                                         System.out.print("Ingrese el domicilio del pasajero: ");
+                                         String domicilio = scanner.nextLine();
 
 
-                                 hotel.agregarReserva(numHabitacion, diasReservados, dni, nombre, apellido, nacionalidad, domicilio);
+                                         hotel.agregarReserva(numHabitacion, diasReservados, dni, nombre, apellido, nacionalidad, domicilio);
 
-                                 break;
+                                         realizarBackup();
+                                         break;
+                                 }
+
                              case 3:
                                  System.out.print("Ingrese el DNI del pasajero para Check-In: ");
                                  int dniPasajeroCheckIn = scanner.nextInt();
@@ -260,7 +330,7 @@ public class Sistema {
                                  hotel.realizarCheckOut(dniPasajeroCheckOut, numHabitacionCheckOut);
                                  break;
                              case 5:
-                                 System.out.println(hotel.mostrarReservas());
+                                hotel.mostrarReservas();
                                  break;
                              case 6:
                                 hotel.listarHabitacionesDisponibles();
@@ -287,8 +357,12 @@ public class Sistema {
                  }
              }
              else{
-                 throw new UsuarioInvalidoEx("Contraseña incorrecta: Acceso Denegado");
-             }
+                 try {
+                     throw new UsuarioInvalidoEx("Contraseña incorrecta: Acceso Denegado");
+                 }catch (UsuarioInvalidoEx e){
+                     System.out.println("Contraseña incorrecta... regresando a menu principal");
+                 }
+                 }
 
              }
 
